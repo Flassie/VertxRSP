@@ -1,3 +1,27 @@
+# Gradle
+.gradle
+/build
+/buildSrc/build
+build
+out
+
+# IntelliJ Idea
+.idea
+.shelf
+/*.iml
+/*.ipr
+/*.iws
+/buildSrc/*.iml
+/buildSrc/*.ipr
+/buildSrc/*.iws
+/buildSrc/out
+/out
+/subprojects/*/*.iml
+/subprojects/*/out
+/.teamcity/*.iml
+/.teamcity/target
+*.log
+
 # Compiled class file
 *.class
 
