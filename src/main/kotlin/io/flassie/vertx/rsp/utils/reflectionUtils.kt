@@ -4,7 +4,6 @@ import io.flassie.vertx.rsp.exceptions.UnsupportedTypeException
 import io.vertx.core.Future
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
-import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.valueParameters
 import kotlin.reflect.jvm.javaMethod

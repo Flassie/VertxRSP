@@ -11,27 +11,20 @@ import io.vertx.serviceproxy.ServiceException
 import io.vertx.serviceproxy.ServiceExceptionMessageCodec
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
-import java.util.*
-import kotlin.collections.HashMap
-import kotlin.reflect.KFunction
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.valueParameters
 import kotlin.reflect.jvm.kotlinFunction
 
 class EventBusProxyInvocationHandler(
-    private val vertx: Vertx,
+    vertx: Vertx,
     private val addr: String,
-    private val clazz: Class<*>,
+    clazz: Class<*>,
     private val deliveryOptions: DeliveryOptions = DeliveryOptions()
 ): InvocationHandler {
     private val eventBus = vertx.eventBus()
     private val objectMapper = ObjectMapper().apply {
         findAndRegisterModules()
         enableDefaultTyping()
-//        enableDefaultTyping(ObjectMapper.DefaultTyping.NON_CONCRETE_AND_ARRAYS)
-
-//        enable(SerializationFeature.WRAP_ROOT_VALUE)
-//        enable(DeserializationFeature.UNWRAP_ROOT_VALUE)
     }
 
     init {
@@ -59,7 +52,7 @@ class EventBusProxyInvocationHandler(
             }
 
             Future::class.createType(returnType.arguments) -> {
-                invokeWithFutureResult(deliveryOptionsWithAction, jsonBody, method.kotlinFunction!!)
+                invokeWithFutureResult(deliveryOptionsWithAction, jsonBody)
             }
 
             else -> return null
@@ -68,8 +61,7 @@ class EventBusProxyInvocationHandler(
 
     private fun invokeWithFutureResult(
         deliveryOptions: DeliveryOptions,
-        body: String,
-        method: KFunction<*>
+        body: String
     ): Future<*> {
         val promise = Promise.promise<Any>()
 

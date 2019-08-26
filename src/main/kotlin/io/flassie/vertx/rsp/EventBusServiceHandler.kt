@@ -1,37 +1,28 @@
 package io.flassie.vertx.rsp
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
 //import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.vertx.core.Future
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
 import io.vertx.core.eventbus.Message
 import io.vertx.serviceproxy.ServiceException
 import io.vertx.serviceproxy.ServiceExceptionMessageCodec
-import java.lang.reflect.ParameterizedType
-import kotlin.reflect.KClass
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findParameterByName
 import kotlin.reflect.jvm.kotlinFunction
 
 class EventBusServiceHandler<out T: Any>(
-    private val vertx: Vertx,
+    vertx: Vertx,
     private val service: T,
-    private val serviceClass: Class<T>
+    serviceClass: Class<T>
 ) : Handler<Message<String>> {
     private val serviceKClass = serviceClass.kotlin
 
     private val objectMapper = ObjectMapper().apply {
         findAndRegisterModules()
         enableDefaultTyping()
-//        enableDefaultTyping(ObjectMapper.DefaultTyping.NON_CONCRETE_AND_ARRAYS)
-
-//        enable(SerializationFeature.WRAP_ROOT_VALUE)
-//        enable(DeserializationFeature.UNWRAP_ROOT_VALUE)
     }
 
     init {
@@ -60,13 +51,6 @@ class EventBusServiceHandler<out T: Any>(
                 body,
                 object : TypeReference<HashMap<String, Any?>>() {}
             )
-
-//            val argsHashMap = if(argsHashMapWrapper == null) {
-//                emptyMap<String, Any>()
-//            } else {
-//                objectMapper.convertValue<HashMap<String, Any>>(argsHashMapWrapper, object : TypeReference<HashMap<String, Any>>() {})
-//            }
-
 
             val method = possibleMethods.find { func ->
                 val keys = argsHashMap.keys
